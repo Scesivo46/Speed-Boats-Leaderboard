@@ -13,8 +13,8 @@ let pendingTimer = null;
 const $ = id => document.getElementById(id);
 const circuitLabel = id => CIRCUITS.find(c => c.id === id)?.label || id;
 const validUuid = uuid => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(uuid);
-const bodyUrl = uuid => `https://crafatar.com/renders/body/${encodeURIComponent(uuid)}?overlay&scale=8`;
-const headUrl = uuid => `https://crafatar.com/avatars/${encodeURIComponent(uuid)}?overlay&size=48`;
+const bodyUrl = uuid => `https://mc-heads.net/body/${encodeURIComponent(uuid)}/256`;
+const headUrl = uuid => `https://mc-heads.net/avatar/${encodeURIComponent(uuid)}/48`;
 
 function formatMillis(value) {
   const ms = Math.max(0, Math.trunc(Number(value) || 0));

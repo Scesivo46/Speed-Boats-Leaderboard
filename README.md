@@ -10,4 +10,4 @@ Web pública y estática para los récords de contrarreloj de DomusRing, Jarama 
 
 El endpoint `?feed=1` devuelve exclusivamente circuito, jugador, UUID, tiempo y fecha. Nunca devuelve `SPEEDBOATS_SECRET`. La hoja y el script permiten lectura pública de estos resultados; no publiques datos privados en esas columnas.
 
-Las skins se cargan desde Crafatar usando el UUID de cada jugador. Si el servicio de skins falla, se muestra la inicial del piloto.
+Las skins se cargan desde MCHeads usando el UUID de cada jugador. Si el servicio de skins falla, se muestra la inicial del piloto.
