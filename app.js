@@ -1,11 +1,11 @@
 const FEED_URL = 'https://script.google.com/macros/s/AKfycbxu6Oqoz6RmYFpiepkhGnV58HsljMHak_dj1cQkzir1r8Pf_0BwZWn0-6Te8FL6pEJN5g/exec';
 const CIRCUITS = [
   {id: 'domusring', label: 'DomusRing'},
-  {id: 'jarama', label: 'Jarama'},
-  {id: 'karting', label: 'Karting'}
+  {id: 'jarama', label: 'Jarama'}
 ];
 const REFRESH_MS = 60000;
 let selectedCircuit = 'domusring';
+let selectedMode = 'time_attack';
 let feed = null;
 let pendingScript = null;
 let pendingTimer = null;
@@ -24,6 +24,10 @@ function formatMillis(value) {
   return `${Math.floor(ms / 60000)}:${String(Math.floor(ms % 60000 / 1000)).padStart(2, '0')}.${String(ms % 1000).padStart(3, '0')}`;
 }
 
+const formatPoints = value => new Intl.NumberFormat('es-ES').format(value);
+const formatResult = record => selectedMode === 'drift'
+  ? `${formatPoints(record.points)} pts` : formatMillis(record.milliseconds);
+
 function formatDate(value) {
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? '—' : new Intl.DateTimeFormat('es-ES', {day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC'}).format(date);
@@ -36,16 +40,16 @@ function el(tag, className, text) {
   return node;
 }
 
-function renderPodium(times) {
+function renderPodium(rows) {
   const root = $('podium');
   root.replaceChildren();
-  if (!times.length) {
-    root.append(el('p', 'podium-empty', 'Todavía no hay tiempos para este circuito.'));
+  if (!rows.length) {
+    root.append(el('p', 'podium-empty', 'Todavía no hay resultados para esta modalidad y circuito.'));
     return;
   }
-  const order = times.length === 1 ? [0] : times.length === 2 ? [1, 0] : [1, 0, 2];
+  const order = rows.length === 1 ? [0] : rows.length === 2 ? [1, 0] : [1, 0, 2];
   for (const index of order) {
-    const record = times[index];
+    const record = rows[index];
     const rank = index + 1;
     const entry = el('div', `podium-entry is-${['first', 'second', 'third'][index]}`);
     if (validUuid(record.uuid)) {
@@ -66,7 +70,7 @@ function renderPodium(times) {
       entry.append(el('div', 'podium-avatar-fallback', record.player.slice(0, 1).toUpperCase()));
     }
     entry.append(el('div', 'podium-name', record.player));
-    entry.append(el('div', 'podium-time', formatMillis(record.milliseconds)));
+    entry.append(el('div', 'podium-time', formatResult(record)));
     const base = el('div', 'podium-base');
     base.append(el('span', 'podium-rank', String(rank).padStart(2, '0')));
     entry.append(base);
@@ -74,18 +78,18 @@ function renderPodium(times) {
   }
 }
 
-function renderTable(times) {
+function renderTable(rows) {
   const body = $('results-body');
   body.replaceChildren();
-  if (!times.length) {
+  if (!rows.length) {
     const row = el('tr');
-    const cell = el('td', 'empty-row', 'Aún no hay vueltas registradas.');
-    cell.colSpan = 4;
+    const cell = el('td', 'empty-row', 'Aún no hay resultados registrados.');
+    cell.colSpan = 5;
     row.append(cell);
     body.append(row);
     return;
   }
-  times.forEach((record, index) => {
+  rows.forEach((record, index) => {
     const row = el('tr');
     const rankCell = el('td');
     rankCell.append(el('span', index < 3 ? 'position top' : 'position', String(index + 1).padStart(2, '0')));
@@ -108,21 +112,71 @@ function renderTable(times) {
     }
     pilot.append(el('span', '', record.player));
     pilotCell.append(pilot);
-    row.append(rankCell, pilotCell, el('td', '', formatMillis(record.milliseconds)), el('td', 'date-cell', formatDate(record.achievedAt)));
+    row.append(rankCell, pilotCell, el('td', '', formatResult(record)),
+      el('td', 'tournament-points', String(record.tournamentPoints)),
+      el('td', 'date-cell', formatDate(record.achievedAt)));
     body.append(row);
   });
 }
 
+function standingRow(position, name, detail, total) {
+  const row = el('div', 'standing-row');
+  row.append(el('span', 'standing-rank', position ? String(position).padStart(2, '0') : '—'));
+  const main = el('div', 'standing-main');
+  main.append(el('strong', '', name), el('small', '', detail));
+  row.append(main);
+  const score = el('span', 'standing-score', total === null ? '—' : String(total));
+  score.append(el('small', '', total === null ? 'PENDIENTE' : 'PUNTOS'));
+  row.append(score);
+  return row;
+}
+
+function renderChampionship(circuit) {
+  $('championship-circuit').textContent = circuitLabel(selectedCircuit);
+  const pilotsRoot = $('individual-standings');
+  const teamsRoot = $('team-standings');
+  pilotsRoot.replaceChildren();
+  teamsRoot.replaceChildren();
+  if (!circuit || !Array.isArray(circuit.drift)) {
+    pilotsRoot.append(el('p', 'standings-empty', 'Los puntos conjuntos estarán disponibles tras actualizar el Apps Script con los resultados de Drift.'));
+  } else {
+    const pilots = SpeedBoatScoring.individual(circuit);
+    if (!pilots.length) pilotsRoot.append(el('p', 'standings-empty', 'Aún no hay pilotos clasificados.'));
+    pilots.forEach((pilot, index) => pilotsRoot.append(standingRow(index + 1, pilot.player,
+      `Time Attack ${pilot.attack} + Drift ${pilot.drift}`, pilot.total)));
+    const teamResult = SpeedBoatScoring.teams(pilots, window.SpeedBoatRoster);
+    teamResult.ranked.forEach((team, index) => teamsRoot.append(standingRow(index + 1, team.name,
+      `${team.pilots.join(' + ')} · TA ${team.attack} + Drift ${team.drift}`, team.total)));
+    teamResult.pending.forEach(team => teamsRoot.append(standingRow(null, team.name, team.reason, null)));
+  }
+  if (!teamsRoot.childElementCount) {
+    for (const name of Object.keys(window.SpeedBoatRoster)) {
+      teamsRoot.append(standingRow(null, name, 'Pilotos por asignar', null));
+    }
+  }
+}
+
 function render() {
   $('results-title').textContent = circuitLabel(selectedCircuit);
+  $('results-kicker').textContent = `TABLA DE RÉCORDS · ${selectedMode === 'drift' ? 'DRIFT' : 'TIME ATTACK'}`;
+  $('podium-caption').textContent = selectedMode === 'drift' ? 'LOS MEJORES DERRAPES' : 'LOS MÁS RÁPIDOS';
+  $('metric-heading').textContent = selectedMode === 'drift' ? 'MEJOR PUNTUACIÓN' : 'MEJOR VUELTA';
+  $('results-note').textContent = selectedMode === 'drift'
+    ? 'Las puntuaciones se ordenan de mayor a menor. Los diez primeros suman puntos para el torneo.'
+    : 'Los tiempos se ordenan de menor a mayor. Los diez primeros suman puntos para el torneo.';
   const circuit = feed?.circuits?.find(c => c.id === selectedCircuit);
-  const times = (Array.isArray(circuit?.times) ? circuit.times : [])
-    .filter(r => r && typeof r.player === 'string' && Number.isSafeInteger(r.milliseconds) && r.milliseconds >= 0)
-    .sort((a, b) => a.milliseconds - b.milliseconds);
-  $('pilots-count').textContent = feed ? String(times.length).padStart(2, '0') : '—';
+  const records = selectedMode === 'drift' ? circuit?.drift : circuit?.times;
+  const rows = SpeedBoatScoring.rank(records, selectedMode);
+  $('pilots-count').textContent = feed ? String(rows.length).padStart(2, '0') : '—';
   if (feed) {
-    renderPodium(times);
-    renderTable(times);
+    if (selectedMode === 'drift' && circuit && !Array.isArray(circuit.drift)) {
+      $('podium').replaceChildren(el('p', 'podium-empty', 'Actualiza el Apps Script para mostrar los resultados de Drift.'));
+      $('results-body').replaceChildren();
+    } else {
+      renderPodium(rows);
+      renderTable(rows);
+    }
+    renderChampionship(circuit);
   }
 }
 
@@ -149,7 +203,8 @@ window.SpeedBoatsFeed = {
     render();
     const now = new Date();
     $('updated-at').textContent = `Actualizado a las ${new Intl.DateTimeFormat('es-ES', {hour: '2-digit', minute: '2-digit'}).format(now)}`;
-    setStatus('Resultados actualizados', 'live');
+    setStatus(data.circuits.some(c => c.id === 'domusring' && !Array.isArray(c.drift))
+      ? 'Time Attack actualizado · Drift pendiente' : 'Resultados actualizados', 'live');
   }
 };
 
@@ -173,6 +228,17 @@ for (const button of document.querySelectorAll('[data-circuit]')) {
   button.addEventListener('click', () => {
     selectedCircuit = button.dataset.circuit;
     for (const item of document.querySelectorAll('[data-circuit]')) {
+      const active = item === button;
+      item.classList.toggle('is-active', active);
+      item.setAttribute('aria-pressed', String(active));
+    }
+    render();
+  });
+}
+for (const button of document.querySelectorAll('[data-mode]')) {
+  button.addEventListener('click', () => {
+    selectedMode = button.dataset.mode;
+    for (const item of document.querySelectorAll('[data-mode]')) {
       const active = item === button;
       item.classList.toggle('is-active', active);
       item.setAttribute('aria-pressed', String(active));
