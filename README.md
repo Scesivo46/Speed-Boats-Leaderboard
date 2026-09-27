@@ -10,5 +10,4 @@ Web pública y estática para los récords de contrarreloj de DomusRing, Jarama 
 
 El endpoint `?feed=1` devuelve exclusivamente circuito, jugador, UUID, tiempo y fecha. Nunca devuelve `SPEEDBOATS_SECRET`. La hoja y el script permiten lectura pública de estos resultados; no publiques datos privados en esas columnas.
 
-Las skins se cargan desde MCHeads usando el UUID de cada jugador. Si el servicio de skins falla, se muestra la inicial del piloto.
-Scesivo usa temporalmente el identificador de su textura oficial porque MCHeads devuelve la skin de Steve al consultar su UUID.
+Las skins se cargan por UUID desde Visage, que devuelve la skin actual de los jugadores. Si falla, la web prueba MCHeads y, si tampoco funciona, muestra la inicial del piloto. No hay que registrar manualmente a los nuevos jugadores.

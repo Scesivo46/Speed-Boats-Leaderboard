@@ -5,10 +5,6 @@ const CIRCUITS = [
   {id: 'karting', label: 'Karting'}
 ];
 const REFRESH_MS = 60000;
-// MCHeads currently resolves this UUID to Steve despite Mojang publishing a custom skin.
-const SKIN_TEXTURE_OVERRIDES = {
-  '386e8044-c5e1-46da-9807-f06f5a417c73': '726f240b9a09c7eb47e4f15cca69096fc8b68c0d4005b3977408679311a684aa'
-};
 let selectedCircuit = 'domusring';
 let feed = null;
 let pendingScript = null;
@@ -17,9 +13,11 @@ let pendingTimer = null;
 const $ = id => document.getElementById(id);
 const circuitLabel = id => CIRCUITS.find(c => c.id === id)?.label || id;
 const validUuid = uuid => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(uuid);
-const skinId = uuid => SKIN_TEXTURE_OVERRIDES[uuid.toLowerCase()] || uuid;
-const bodyUrl = uuid => `https://mc-heads.net/body/${encodeURIComponent(skinId(uuid))}/256`;
-const headUrl = uuid => `https://mc-heads.net/avatar/${encodeURIComponent(skinId(uuid))}/48`;
+const compactUuid = uuid => uuid.replace(/-/g, '');
+const bodyUrl = uuid => `https://visage.surgeplay.com/full/256/${compactUuid(uuid)}`;
+const headUrl = uuid => `https://visage.surgeplay.com/face/48/${compactUuid(uuid)}`;
+const backupBodyUrl = uuid => `https://mc-heads.net/body/${encodeURIComponent(uuid)}/256`;
+const backupHeadUrl = uuid => `https://mc-heads.net/avatar/${encodeURIComponent(uuid)}/48`;
 
 function formatMillis(value) {
   const ms = Math.max(0, Math.trunc(Number(value) || 0));
@@ -54,8 +52,15 @@ function renderPodium(times) {
       const image = el('img', 'podium-avatar');
       image.src = bodyUrl(record.uuid);
       image.alt = `Skin de ${record.player}`;
-      image.loading = 'lazy';
-      image.onerror = () => image.replaceWith(el('div', 'podium-avatar-fallback', record.player.slice(0, 1).toUpperCase()));
+      image.loading = 'eager';
+      image.onerror = () => {
+        if (image.dataset.backup) {
+          image.replaceWith(el('div', 'podium-avatar-fallback', record.player.slice(0, 1).toUpperCase()));
+        } else {
+          image.dataset.backup = '1';
+          image.src = backupBodyUrl(record.uuid);
+        }
+      };
       entry.append(image);
     } else {
       entry.append(el('div', 'podium-avatar-fallback', record.player.slice(0, 1).toUpperCase()));
@@ -91,7 +96,14 @@ function renderTable(times) {
       head.src = headUrl(record.uuid);
       head.alt = '';
       head.loading = 'lazy';
-      head.onerror = () => { head.style.visibility = 'hidden'; };
+      head.onerror = () => {
+        if (head.dataset.backup) {
+          head.style.visibility = 'hidden';
+        } else {
+          head.dataset.backup = '1';
+          head.src = backupHeadUrl(record.uuid);
+        }
+      };
       pilot.append(head);
     }
     pilot.append(el('span', '', record.player));
