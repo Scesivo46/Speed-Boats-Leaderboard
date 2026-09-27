@@ -2,6 +2,8 @@
 
 Web pública y estática para el campeonato. Durante el evento solo se muestra Jarama; el selector y las opciones de DomusRing y Karting permanecen preparados en `index.html` y `app.js` para habilitarlos después. Muestra Time Attack y Drift, y calcula las clasificaciones individuales y por equipos. GitHub Pages sirve los archivos; la página consulta de solo lectura el Apps Script de la hoja cada minuto y al volver a la pestaña.
 
+Web creada por Scesivo para Domus Aeterna SMP. El código de esta web se distribuye bajo la licencia MIT; el logo proporcionado para el proyecto no queda incluido en esa licencia.
+
 ## Publicación
 
 1. En el Apps Script de la hoja, sustituye `Code.gs` por la versión de `integrations/google-sheets/Code.gs` del repositorio privado del mod.
