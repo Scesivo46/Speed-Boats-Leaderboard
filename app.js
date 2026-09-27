@@ -159,7 +159,6 @@ function renderChampionship(circuit) {
 
 function render() {
   $('results-title').textContent = circuitLabel(selectedCircuit);
-  $('results-kicker').textContent = `TABLA DE RÉCORDS · ${selectedMode === 'drift' ? 'DRIFT' : 'TIME ATTACK'}`;
   $('podium-caption').textContent = selectedMode === 'drift' ? 'LOS MEJORES DERRAPES' : 'LOS MÁS RÁPIDOS';
   $('metric-heading').textContent = selectedMode === 'drift' ? 'MEJOR PUNTUACIÓN' : 'MEJOR VUELTA';
   $('results-note').textContent = selectedMode === 'drift'
