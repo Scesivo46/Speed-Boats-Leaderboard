@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0d12">
+  <meta name="description" content="Clasificación de contrarreloj de Speed Boat: tiempos y pilotos por circuito.">
+  <title>Speed Boat · Clasificación</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+  <div class="page">
+    <header class="masthead">
+      <div class="brandline"><span class="brand-mark">SB<span class="brand-dot">.</span></span><span class="brand-separator"></span><span>CLASIFICACIÓN OFICIAL</span></div>
+      <div class="live-status" id="live-status"><span class="status-dot"></span><span id="status-text">Conectando con los resultados…</span></div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="eyebrow-line"></span> SPEED BOAT / TIME ATTACK</p>
+          <h1 id="page-title">Cada milésima<br><em>cuenta.</em></h1>
+          <p class="hero-description">Los mejores tiempos de la comunidad. Elige un circuito y descubre quién domina la pista.</p>
+          <div class="hero-rule"><span>01</span><span>ELIGE TU CIRCUITO</span><span class="rule-line"></span><span>03</span><span>BATIENDO RÉCORDS</span></div>
+        </div>
+        <div class="hero-logo-wrap"><img class="hero-logo" src="./assets/domusring-logo.png" alt="Logo de DomusRing"></div>
+      </section>
+
+      <section class="circuits-section" aria-labelledby="circuits-title">
+        <div class="section-heading"><div><p class="section-kicker">SELECCIÓN DE PISTA</p><h2 id="circuits-title">Circuitos</h2></div><span class="section-meta">3 CIRCUITOS DISPONIBLES</span></div>
+        <div class="circuit-grid" role="group" aria-label="Seleccionar circuito">
+          <button class="circuit-card is-active" data-circuit="domusring" type="button" aria-pressed="true"><span class="circuit-index">01 / CIRCUITO</span><strong>DomusRing</strong><span class="circuit-foot"><span>VER CLASIFICACIÓN</span><span class="card-arrow">↗</span></span></button>
+          <button class="circuit-card" data-circuit="jarama" type="button" aria-pressed="false"><span class="circuit-index">02 / CIRCUITO</span><strong>Jarama</strong><span class="circuit-foot"><span>VER CLASIFICACIÓN</span><span class="card-arrow">↗</span></span></button>
+          <button class="circuit-card" data-circuit="karting" type="button" aria-pressed="false"><span class="circuit-index">03 / CIRCUITO</span><strong>Karting</strong><span class="circuit-foot"><span>VER CLASIFICACIÓN</span><span class="card-arrow">↗</span></span></button>
+        </div>
+      </section>
+
+      <section class="results-section" aria-labelledby="results-title">
+        <div class="section-heading results-heading"><div><p class="section-kicker">TABLA DE RÉCORDS · CONTRARRELOJ</p><h2 id="results-title">DomusRing</h2></div><div class="circuit-count"><span id="pilots-count">—</span><small>PILOTOS</small></div></div>
+        <div class="podium-shell">
+          <div class="podium-topline"><span>LOS MÁS RÁPIDOS</span><span>TOP 03 <span class="topline-slash">/</span> ALL TIME</span></div>
+          <div id="podium" class="podium" aria-live="polite"><p class="placeholder">Cargando podio…</p></div>
+        </div>
+        <div class="table-heading"><div><p class="section-kicker">CLASIFICACIÓN COMPLETA</p><h3>Todos los tiempos</h3></div><span class="table-updated" id="updated-at">Actualización automática</span></div>
+        <div class="leaderboard-wrap"><table class="leaderboard"><thead><tr><th scope="col">POS.</th><th scope="col">PILOTO</th><th scope="col">MEJOR VUELTA</th><th scope="col" class="date-cell">FECHA</th></tr></thead><tbody id="results-body"><tr><td colspan="4" class="empty-row">Cargando clasificación…</td></tr></tbody></table></div>
+        <p class="results-note">Los tiempos se ordenan de menor a mayor. El primer puesto es la vuelta más rápida.</p>
+      </section>
+    </main>
+    <footer><span>© <span id="year"></span> SPEED BOAT</span><span>HECHO PARA LA COMUNIDAD</span><a href="#page-title">VOLVER ARRIBA ↑</a></footer>
+  </div>
+</body>
+</html>
