@@ -1,10 +1,11 @@
 const FEED_URL = 'https://script.google.com/macros/s/AKfycbxu6Oqoz6RmYFpiepkhGnV58HsljMHak_dj1cQkzir1r8Pf_0BwZWn0-6Te8FL6pEJN5g/exec';
 const CIRCUITS = [
   {id: 'domusring', label: 'DomusRing'},
-  {id: 'jarama', label: 'Jarama'}
+  {id: 'jarama', label: 'Jarama'},
+  {id: 'karting', label: 'Karting'}
 ];
 const REFRESH_MS = 60000;
-let selectedCircuit = 'domusring';
+let selectedCircuit = 'jarama';
 let selectedMode = 'time_attack';
 let feed = null;
 let pendingScript = null;
@@ -203,7 +204,7 @@ window.SpeedBoatsFeed = {
     render();
     const now = new Date();
     $('updated-at').textContent = `Actualizado a las ${new Intl.DateTimeFormat('es-ES', {hour: '2-digit', minute: '2-digit'}).format(now)}`;
-    setStatus(data.circuits.some(c => c.id === 'domusring' && !Array.isArray(c.drift))
+    setStatus(data.circuits.some(c => c.id === selectedCircuit && !Array.isArray(c.drift))
       ? 'Time Attack actualizado · Drift pendiente' : 'Resultados actualizados', 'live');
   }
 };

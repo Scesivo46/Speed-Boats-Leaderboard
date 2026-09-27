@@ -1,6 +1,6 @@
 # Speed Boat · clasificación
 
-Web pública y estática para el campeonato de DomusRing y Jarama. Muestra Time Attack y Drift, y calcula las clasificaciones individuales y por equipos de cada circuito. GitHub Pages sirve los archivos; la página consulta de solo lectura el Apps Script de la hoja cada minuto y al volver a la pestaña.
+Web pública y estática para el campeonato. Durante el evento solo se muestra Jarama; el selector y las opciones de DomusRing y Karting permanecen preparados en `index.html` y `app.js` para habilitarlos después. Muestra Time Attack y Drift, y calcula las clasificaciones individuales y por equipos. GitHub Pages sirve los archivos; la página consulta de solo lectura el Apps Script de la hoja cada minuto y al volver a la pestaña.
 
 ## Publicación
 

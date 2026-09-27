@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b0d12">
-  <meta name="description" content="Clasificación de Time Attack y Drift de Speed Boat por piloto y por equipos.">
+  <meta name="description" content="Clasificación de Time Attack y Drift en Jarama: pilotos, equipos y calendario del evento.">
   <title>Speed Boat · Clasificación</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="./style.css">
   <script defer src="./roster.js?v=1"></script>
   <script defer src="./scoring.js?v=1"></script>
-  <script defer src="./app.js?v=3"></script>
+  <script defer src="./app.js?v=4"></script>
 </head>
 <body>
   <div class="ambient ambient-one" aria-hidden="true"></div>
@@ -27,9 +27,9 @@
       <section class="hero" aria-labelledby="page-title">
         <div class="hero-copy">
           <p class="eyebrow"><span class="eyebrow-line"></span> SPEED BOAT / CAMPEONATO</p>
-          <h1 id="page-title">Cada punto<br><em>cuenta.</em></h1>
-          <p class="hero-description">Dos modalidades. Dos circuitos. Una clasificación para pilotos y equipos.</p>
-          <div class="hero-rule"><span>01</span><span>ELIGE MODALIDAD</span><span class="rule-line"></span><span>02</span><span>ELIGE CIRCUITO</span></div>
+          <h1 id="page-title">Cada milésima<br><em>cuenta.</em></h1>
+          <p class="hero-description">En Jarama, el <strong>Time Attack</strong> se disputará los días <strong>12, 14 y 16 de octubre</strong>. El <strong>Drift</strong> tomará la pista los días <strong>13, 15 y 17 de octubre</strong>.</p>
+          <div class="hero-rule"><span>01</span><span>ELIGE MODALIDAD</span><span class="rule-line"></span><span>02</span><span>SUMA PUNTOS</span></div>
         </div>
         <div class="hero-logo-wrap"><img class="hero-logo" src="./assets/domusring-logo.png" alt="Logo de DomusRing"></div>
       </section>
@@ -42,16 +42,18 @@
         </div>
       </section>
 
-      <section class="circuits-section" aria-labelledby="circuits-title">
-        <div class="section-heading"><div><p class="section-kicker">SELECCIÓN DE PISTA</p><h2 id="circuits-title">Circuitos</h2></div><span class="section-meta">2 CIRCUITOS DISPONIBLES</span></div>
+      <!-- Rehabilitar esta sección al abrir DomusRing y Karting tras el evento. -->
+      <section class="circuits-section" aria-labelledby="circuits-title" hidden>
+        <div class="section-heading"><div><p class="section-kicker">SELECCIÓN DE PISTA</p><h2 id="circuits-title">Circuitos</h2></div><span class="section-meta">3 CIRCUITOS DISPONIBLES</span></div>
         <div class="circuit-grid" role="group" aria-label="Seleccionar circuito">
-          <button class="circuit-card is-active" data-circuit="domusring" type="button" aria-pressed="true"><span class="circuit-index">01 / CIRCUITO</span><strong>DomusRing</strong><span class="circuit-foot"><span>VER CLASIFICACIÓN</span><span class="card-arrow">↗</span></span></button>
-          <button class="circuit-card" data-circuit="jarama" type="button" aria-pressed="false"><span class="circuit-index">02 / CIRCUITO</span><strong>Jarama</strong><span class="circuit-foot"><span>VER CLASIFICACIÓN</span><span class="card-arrow">↗</span></span></button>
+          <button class="circuit-card" data-circuit="domusring" type="button" aria-pressed="false"><span class="circuit-index">01 / CIRCUITO</span><strong>DomusRing</strong><span class="circuit-foot"><span>VER CLASIFICACIÓN</span><span class="card-arrow">↗</span></span></button>
+          <button class="circuit-card is-active" data-circuit="jarama" type="button" aria-pressed="true"><span class="circuit-index">02 / CIRCUITO</span><strong>Jarama</strong><span class="circuit-foot"><span>VER CLASIFICACIÓN</span><span class="card-arrow">↗</span></span></button>
+          <button class="circuit-card" data-circuit="karting" type="button" aria-pressed="false"><span class="circuit-index">03 / CIRCUITO</span><strong>Karting</strong><span class="circuit-foot"><span>VER CLASIFICACIÓN</span><span class="card-arrow">↗</span></span></button>
         </div>
       </section>
 
       <section class="results-section" aria-labelledby="results-title">
-        <div class="section-heading results-heading"><div><p class="section-kicker" id="results-kicker">TABLA DE RÉCORDS · TIME ATTACK</p><h2 id="results-title">DomusRing</h2></div><div class="circuit-count"><span id="pilots-count">—</span><small>PILOTOS</small></div></div>
+        <div class="section-heading results-heading"><div><p class="section-kicker" id="results-kicker">TABLA DE RÉCORDS · TIME ATTACK</p><h2 id="results-title">Jarama</h2></div><div class="circuit-count"><span id="pilots-count">—</span><small>PILOTOS</small></div></div>
         <div class="podium-shell">
           <div class="podium-topline"><span id="podium-caption">LOS MÁS RÁPIDOS</span><span>TOP 03 <span class="topline-slash">/</span> ALL TIME</span></div>
           <div id="podium" class="podium" aria-live="polite"><p class="placeholder">Cargando podio…</p></div>
@@ -62,7 +64,7 @@
       </section>
 
       <section class="championship-section" aria-labelledby="championship-title">
-        <div class="section-heading"><div><p class="section-kicker">TIME ATTACK + DRIFT</p><h2 id="championship-title">Campeonato <span id="championship-circuit">DomusRing</span></h2></div><span class="section-meta">PUNTOS POR CIRCUITO</span></div>
+        <div class="section-heading"><div><p class="section-kicker">TIME ATTACK + DRIFT</p><h2 id="championship-title">Campeonato <span id="championship-circuit">Jarama</span></h2></div><span class="section-meta">PUNTOS POR CIRCUITO</span></div>
         <p class="championship-intro">Cada modalidad reparte 15, 12, 10, 8, 6, 5, 4, 3, 2 y 1 puntos a los diez primeros. El total del piloto suma ambas pruebas; el equipo suma los puntos de sus dos pilotos.</p>
         <div class="championship-grid">
           <div class="championship-card"><div class="championship-card-head"><h3>Pilotos</h3><span>INDIVIDUAL</span></div><div id="individual-standings" class="standings-list"><p class="standings-empty">Cargando…</p></div></div>
