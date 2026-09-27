@@ -5,6 +5,10 @@ const CIRCUITS = [
   {id: 'karting', label: 'Karting'}
 ];
 const REFRESH_MS = 60000;
+// MCHeads currently resolves this UUID to Steve despite Mojang publishing a custom skin.
+const SKIN_TEXTURE_OVERRIDES = {
+  '386e8044-c5e1-46da-9807-f06f5a417c73': '726f240b9a09c7eb47e4f15cca69096fc8b68c0d4005b3977408679311a684aa'
+};
 let selectedCircuit = 'domusring';
 let feed = null;
 let pendingScript = null;
@@ -13,8 +17,9 @@ let pendingTimer = null;
 const $ = id => document.getElementById(id);
 const circuitLabel = id => CIRCUITS.find(c => c.id === id)?.label || id;
 const validUuid = uuid => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(uuid);
-const bodyUrl = uuid => `https://mc-heads.net/body/${encodeURIComponent(uuid)}/256`;
-const headUrl = uuid => `https://mc-heads.net/avatar/${encodeURIComponent(uuid)}/48`;
+const skinId = uuid => SKIN_TEXTURE_OVERRIDES[uuid.toLowerCase()] || uuid;
+const bodyUrl = uuid => `https://mc-heads.net/body/${encodeURIComponent(skinId(uuid))}/256`;
+const headUrl = uuid => `https://mc-heads.net/avatar/${encodeURIComponent(skinId(uuid))}/48`;
 
 function formatMillis(value) {
   const ms = Math.max(0, Math.trunc(Number(value) || 0));
