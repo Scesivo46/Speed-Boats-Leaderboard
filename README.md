@@ -4,6 +4,8 @@ Web pública y estática para el campeonato. Durante el evento solo se muestra J
 
 Web creada por Scesivo para Domus Aeterna SMP. El código de esta web se distribuye bajo la licencia MIT; el logo proporcionado para el proyecto no queda incluido en esa licencia.
 
+El campeonato de Jarama admite marcas logradas desde el 11/10/2026 a las 00:00 hasta el 24/10/2026 a las 23:59:59.999, hora de Madrid. La web excluye del podio y de las clasificaciones cualquier marca fuera de ese plazo. Para que una mejora posterior tampoco reemplace en la hoja una marca válida, el Apps Script debe actualizarse con la versión de este proyecto: a partir del cierre conserva la pestaña de Jarama sin modificarla, mientras los demás circuitos pueden seguir funcionando.
+
 ## Publicación
 
 1. En el Apps Script de la hoja, sustituye `Code.gs` por la versión de `integrations/google-sheets/Code.gs` del repositorio privado del mod.
