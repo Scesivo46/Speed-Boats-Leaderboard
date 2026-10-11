@@ -199,7 +199,7 @@ window.SpeedBoatsFeed = {
       setStatus('No se pudieron leer los resultados', 'error');
       return;
     }
-    feed = {...data, circuits: data.circuits.map(SpeedBoatScoring.championshipCircuit)};
+    feed = data;
     render();
     const now = new Date();
     $('updated-at').textContent = `Actualizado a las ${new Intl.DateTimeFormat('es-ES', {hour: '2-digit', minute: '2-digit'}).format(now)}`;

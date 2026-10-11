@@ -1,20 +1,5 @@
 (function (root) {
   const POINTS = [15, 12, 10, 8, 6, 5, 4, 3, 2, 1];
-  // The event runs from 11 October 00:00 to 25 October 00:00 in Europe/Madrid (CEST).
-  const CHAMPIONSHIP_START = Date.parse('2026-10-10T22:00:00Z');
-  const CHAMPIONSHIP_END = Date.parse('2026-10-24T22:00:00Z');
-
-  function championshipCircuit(circuit) {
-    if (circuit?.id !== 'jarama') return circuit;
-    const inWindow = record => {
-      const achievedAt = Date.parse(record?.achievedAt);
-      return Number.isFinite(achievedAt)
-        && achievedAt >= CHAMPIONSHIP_START && achievedAt < CHAMPIONSHIP_END;
-    };
-    return {...circuit,
-      times: Array.isArray(circuit.times) ? circuit.times.filter(inWindow) : circuit.times,
-      drift: Array.isArray(circuit.drift) ? circuit.drift.filter(inWindow) : circuit.drift};
-  }
   const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
   function rank(records, mode) {
@@ -76,6 +61,6 @@
     return {ranked, pending};
   }
 
-  root.SpeedBoatScoring = {POINTS, rank, individual, teams, championshipCircuit};
+  root.SpeedBoatScoring = {POINTS, rank, individual, teams};
   if (typeof module !== 'undefined') module.exports = root.SpeedBoatScoring;
 })(typeof window !== 'undefined' ? window : globalThis);
