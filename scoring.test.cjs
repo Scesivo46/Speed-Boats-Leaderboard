@@ -18,4 +18,7 @@ assert.equal(result.ranked[0].drift, 27);
 assert.equal(result.ranked[0].total, 54);
 assert.equal(result.pending[0].name, 'Aprilia Racing');
 assert.equal(teams(pilots, {A: [ids[0], ids[1]], B: [ids[0], ids[2]]}).pending.length, 1);
+const named = teams([], {A: [{uuid: ids[0], name: 'Piloto A'}, {uuid: ids[1], name: 'Piloto B'}]});
+assert.deepEqual(named.ranked[0].pilots, ['Piloto A', 'Piloto B']);
+assert.equal(named.ranked[0].total, 0);
 console.log('PASS: top-10 points, both modes, individual totals, team totals, incomplete and duplicate rosters');

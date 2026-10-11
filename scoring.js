@@ -43,14 +43,16 @@
     const ranked = [];
     const pending = [];
     for (const [name, members] of Object.entries(roster || {})) {
-      const ids = Array.isArray(members) ? members.map(id => String(id).toLowerCase()) : [];
+      const racers = Array.isArray(members) ? members.map(member => typeof member === 'string'
+        ? {uuid: member, name: ''} : member) : [];
+      const ids = racers.map(member => String(member?.uuid || '').toLowerCase());
       if (ids.length !== 2 || ids[0] === ids[1] || ids.some(id => !UUID.test(id) || assigned.has(id))) {
         pending.push({name, reason: 'Pilotos por asignar'});
         continue;
       }
       ids.forEach(id => assigned.add(id));
       const pilots = ids.map(id => byUuid.get(id));
-      ranked.push({name, members: ids, pilots: pilots.map((pilot, index) => pilot?.player || ids[index]),
+      ranked.push({name, members: ids, pilots: pilots.map((pilot, index) => pilot?.player || racers[index]?.name || ids[index]),
         attack: pilots.reduce((sum, pilot) => sum + (pilot?.attack || 0), 0),
         drift: pilots.reduce((sum, pilot) => sum + (pilot?.drift || 0), 0)});
     }

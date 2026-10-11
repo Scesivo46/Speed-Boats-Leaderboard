@@ -12,10 +12,13 @@ Web creada por Scesivo para Domus Aeterna SMP. El código de esta web se distrib
 
 ## Equipos y puntuación
 
-Edita `roster.js` cuando se conozcan las parejas. Cada equipo debe contener exactamente dos UUID distintas, por ejemplo:
+Las parejas se sortearon el 11 de octubre de 2026 y están guardadas en `roster.js`. Cada equipo contiene exactamente dos UUID distintas, por ejemplo:
 
 ```js
-'Ducati Lenovo Team': ['uuid-del-piloto-a', 'uuid-del-piloto-b']
+'Ducati Lenovo Team': [
+  {uuid: 'uuid-del-piloto-a', name: 'Piloto A'},
+  {uuid: 'uuid-del-piloto-b', name: 'Piloto B'}
+]
 ```
 
 No se adjudican puntos de equipo hasta que tenga las dos UUID. Un piloto no puede figurar en dos equipos. Los puntos por puesto en cada modalidad son `15, 12, 10, 8, 6, 5, 4, 3, 2, 1`; a partir del 11.º son 0. Cada piloto suma sus puntos de Time Attack y Drift, y cada equipo suma los de sus dos pilotos. Los empates en la marca se ordenan por la fecha del récord más antiguo y, si aún empatan, por UUID.

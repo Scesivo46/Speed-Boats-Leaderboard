@@ -146,7 +146,7 @@ function renderChampionship(circuit) {
     pilots.forEach((pilot, index) => pilotsRoot.append(standingRow(index + 1, pilot.player,
       `Time Attack ${pilot.attack} + Drift ${pilot.drift}`, pilot.total)));
     const teamResult = SpeedBoatScoring.teams(pilots, window.SpeedBoatRoster);
-    teamResult.ranked.forEach((team, index) => teamsRoot.append(standingRow(index + 1, team.name,
+    teamResult.ranked.forEach((team, index) => teamsRoot.append(standingRow(team.total > 0 ? index + 1 : null, team.name,
       `${team.pilots.join(' + ')} · TA ${team.attack} + Drift ${team.drift}`, team.total)));
     teamResult.pending.forEach(team => teamsRoot.append(standingRow(null, team.name, team.reason, null)));
   }
