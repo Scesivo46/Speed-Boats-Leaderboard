@@ -113,7 +113,14 @@ function renderTable(rows) {
     }
     pilot.append(el('span', '', record.player));
     pilotCell.append(pilot);
-    row.append(rankCell, pilotCell, el('td', '', formatResult(record)),
+    const resultCell = el('td', '', formatResult(record));
+    if (selectedMode === 'time_attack') {
+      const gap = Math.max(0, record.milliseconds - rows[0].milliseconds);
+      const difference = el('small', 'lap-difference', `+${(gap / 1000).toFixed(3)} s`);
+      difference.title = 'Diferencia respecto al primero';
+      resultCell.append(difference);
+    }
+    row.append(rankCell, pilotCell, resultCell,
       el('td', 'tournament-points', String(record.tournamentPoints)),
       el('td', 'date-cell', formatDate(record.achievedAt)));
     body.append(row);
